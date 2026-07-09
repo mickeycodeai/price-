@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Academic Performance &amp; AI Dependency Analytics</title>
+    <title>APAD Analytics · Fixed CSV Import</title>
     <style>
         /* ── CSS Variables ── */
         :root {
@@ -45,7 +45,6 @@
             font-size: 15px;
         }
 
-        /* ── Scrollbar ── */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -61,7 +60,6 @@
             background: var(--text-muted);
         }
 
-        /* ── Layout ── */
         .app-container {
             display: flex;
             min-height: 100vh;
@@ -206,6 +204,11 @@
             margin-bottom: 1.25rem;
             color: var(--text-primary);
             letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         /* ── Forms ── */
@@ -475,114 +478,6 @@
             opacity: 0.4;
         }
 
-        /* ── Estimation Output ── */
-        .estimation-output {
-            margin-top: 1.5rem;
-            padding: 1.75rem 2rem;
-            background: linear-gradient(135deg, #f7f9fb 0%, #ecf1f7 100%);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .estimation-value {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin: 0.3rem 0;
-            letter-spacing: -1px;
-        }
-
-        .estimation-tier {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 0.3rem;
-        }
-
-        .estimation-breakdown {
-            margin-top: 1.25rem;
-            text-align: left;
-            background: #ffffff;
-            padding: 1rem 1.5rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-light);
-        }
-
-        .estimation-breakdown h4 {
-            margin-bottom: 0.6rem;
-            color: var(--text-primary);
-            font-size: 0.92rem;
-            font-weight: 600;
-        }
-
-        .breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.35rem 0;
-            border-bottom: 1px solid var(--border-light);
-            font-size: 0.85rem;
-        }
-
-        .breakdown-item:last-child {
-            border-bottom: none;
-            font-weight: 600;
-            color: var(--accent);
-            padding-top: 0.6rem;
-        }
-
-        /* ── Slider ── */
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .slider-container input[type="range"] {
-            flex: 1;
-            accent-color: var(--accent);
-            height: 4px;
-            cursor: pointer;
-        }
-
-        .slider-value {
-            min-width: 32px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--accent);
-            font-size: 0.95rem;
-        }
-
-        /* ── Toggle Buttons ── */
-        .toggle-container {
-            display: flex;
-            gap: 0.6rem;
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
-        }
-
-        .toggle-btn {
-            padding: 0.45rem 1.2rem;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all var(--transition);
-            font-family: inherit;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .toggle-btn.active {
-            background-color: var(--accent);
-            color: #ffffff;
-            border-color: var(--accent);
-        }
-
-        .toggle-btn:hover:not(.active) {
-            background: var(--bg);
-        }
-
         /* ── CSV Upload ── */
         .csv-upload-zone {
             border: 2px dashed var(--border);
@@ -726,19 +621,6 @@
             flex-wrap: wrap;
         }
 
-        /* ── Tool Table ── */
-        .tool-table th {
-            background-color: var(--primary);
-            color: #ffffff;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-        }
-
-        .tool-table td {
-            font-size: 0.85rem;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 820px) {
             .sidebar {
@@ -790,12 +672,8 @@
                 width: 100%;
                 justify-content: center;
             }
-            .estimation-value {
-                font-size: 2.2rem;
-            }
         }
 
-        /* ── Misc ── */
         .text-muted {
             color: var(--text-muted);
         }
@@ -805,9 +683,6 @@
         .mt-1 {
             margin-top: 0.75rem;
         }
-        .mb-1 {
-            margin-bottom: 0.75rem;
-        }
         .flex-wrap {
             display: flex;
             flex-wrap: wrap;
@@ -816,9 +691,6 @@
         }
         .gap-1 {
             gap: 0.5rem;
-        }
-        .w-full {
-            width: 100%;
         }
 
         .stat-interpretation {
@@ -843,6 +715,156 @@
             background: var(--border-light);
             color: var(--text-secondary);
         }
+
+        /* ── Estimation ── */
+        .estimation-output {
+            margin-top: 1.5rem;
+            padding: 1.75rem 2rem;
+            background: linear-gradient(135deg, #f7f9fb 0%, #ecf1f7 100%);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .estimation-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0.3rem 0;
+            letter-spacing: -1px;
+        }
+
+        .estimation-tier {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .estimation-breakdown {
+            margin-top: 1.25rem;
+            text-align: left;
+            background: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+        }
+
+        .estimation-breakdown h4 {
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.85rem;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--accent);
+            padding-top: 0.6rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent);
+            height: 4px;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            min-width: 32px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 0.45rem 1.2rem;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .toggle-btn.active {
+            background-color: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: var(--bg);
+        }
+
+        .tool-table th {
+            background-color: var(--primary);
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-table td {
+            font-size: 0.85rem;
+        }
+
+        .csv-import-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .csv-import-stats .stat-item {
+            background: #f7f9fb;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .csv-import-stats .stat-item strong {
+            color: var(--text-primary);
+            display: block;
+            font-size: 1.2rem;
+        }
+
+        .error-detail {
+            font-size: 0.82rem;
+            color: var(--danger);
+            background: var(--danger-bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(177, 62, 62, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -855,21 +877,11 @@
                 <div class="subtitle">Academic Performance · AI Dependency</div>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item active" data-target="module1">
-                    <span class="nav-num">1</span> Data Collection
-                </li>
-                <li class="nav-item" data-target="module2">
-                    <span class="nav-num">2</span> Statistical Analysis
-                </li>
-                <li class="nav-item" data-target="module3">
-                    <span class="nav-num">3</span> Predictive Modeling
-                </li>
-                <li class="nav-item" data-target="module4">
-                    <span class="nav-num">4</span> AI Estimation
-                </li>
-                <li class="nav-item" data-target="module5">
-                    <span class="nav-num">5</span> System Ecosystem
-                </li>
+                <li class="nav-item active" data-target="module1"><span class="nav-num">1</span> Data Collection</li>
+                <li class="nav-item" data-target="module2"><span class="nav-num">2</span> Statistical Analysis</li>
+                <li class="nav-item" data-target="module3"><span class="nav-num">3</span> Predictive Modeling</li>
+                <li class="nav-item" data-target="module4"><span class="nav-num">4</span> AI Estimation</li>
+                <li class="nav-item" data-target="module5"><span class="nav-num">5</span> System Ecosystem</li>
             </ul>
         </aside>
 
@@ -877,7 +889,7 @@
         <main class="main-content">
 
             <!-- ============================================================
-            MODULE 1: DATA COLLECTION
+            MODULE 1: DATA COLLECTION (with FIXED CSV import)
             ============================================================ -->
             <section id="module1" class="module-section active">
                 <div class="section-header">
@@ -899,31 +911,15 @@
                         </div>
                         <div class="form-group">
                             <label>Sex</label>
-                            <select id="sex">
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
+                            <select id="sex"><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select>
                         </div>
                         <div class="form-group">
                             <label>Academic Strand</label>
-                            <select id="strand">
-                                <option value="">Select</option>
-                                <option value="HUMSS">HUMSS</option>
-                                <option value="TVL">TVL</option>
-                                <option value="STEM">STEM</option>
-                                <option value="ABM">ABM</option>
-                            </select>
+                            <select id="strand"><option value="">Select</option><option value="HUMSS">HUMSS</option><option value="TVL">TVL</option><option value="STEM">STEM</option><option value="ABM">ABM</option></select>
                         </div>
                         <div class="form-group">
                             <label>Primary AI Tool</label>
-                            <select id="aiTool">
-                                <option value="">Select</option>
-                                <option value="Generative AI">Generative AI</option>
-                                <option value="Grammar/Spell Check">Grammar / Spell Check</option>
-                                <option value="Research Assistant">Research Assistant</option>
-                                <option value="Code Generator">Code Generator</option>
-                            </select>
+                            <select id="aiTool"><option value="">Select</option><option value="Generative AI">Generative AI</option><option value="Grammar/Spell Check">Grammar / Spell Check</option><option value="Research Assistant">Research Assistant</option><option value="Code Generator">Code Generator</option></select>
                         </div>
                         <div class="form-group">
                             <label>Frequency of Use (1–5)</label>
@@ -931,13 +927,7 @@
                         </div>
                         <div class="form-group">
                             <label>Primary Purpose</label>
-                            <select id="purpose">
-                                <option value="">Select</option>
-                                <option value="Assignment Completion">Assignment Completion</option>
-                                <option value="Concept Understanding">Concept Understanding</option>
-                                <option value="Exam Preparation">Exam Preparation</option>
-                                <option value="Creative Generation">Creative Generation</option>
-                            </select>
+                            <select id="purpose"><option value="">Select</option><option value="Assignment Completion">Assignment Completion</option><option value="Concept Understanding">Concept Understanding</option><option value="Exam Preparation">Exam Preparation</option><option value="Creative Generation">Creative Generation</option></select>
                         </div>
                         <div class="form-group">
                             <label>General Weighted Average (GWA)</label>
@@ -952,30 +942,39 @@
                     </div>
                 </div>
 
-                <!-- CSV Upload -->
+                <!-- CSV Upload — FIXED -->
                 <div class="card">
-                    <div class="card-title">Import from CSV</div>
+                    <div class="card-title">
+                        Import from CSV
+                        <button class="btn btn-sm btn-outline" id="downloadTemplateBtn">📄 Download Template</button>
+                    </div>
                     <p class="text-secondary" style="font-size:0.88rem; margin-bottom:1rem;">
                         Upload a CSV file with columns: <strong>id, age, sex, strand, aiTool, frequency, purpose, gwa</strong>.
+                        The system now handles <strong>common column name variations</strong> (e.g. "Student ID", "Gender", "AI Tool", "GWA").
                         A preview window will appear so you can review the data before importing.
                     </p>
 
                     <div class="csv-upload-zone" id="csvDropZone">
                         <p><strong>Drop your CSV file here</strong> or click to browse</p>
-                        <span class="file-hint">Supports .csv files</span>
+                        <span class="file-hint">Supports .csv files — accepts common column name variants</span>
                         <input type="file" id="csvFileInput" accept=".csv" />
                     </div>
 
                     <div id="csvFileInfo" class="file-info" style="display: none;">
                         <span class="file-name" id="csvFileName">file.csv</span>
-                        <span>(<span id="csvRowCount">0</span> rows)</span>
+                        <span>(<span id="csvRowCount">0</span> rows, <span id="csvColCount">0</span> columns)</span>
+                        <span id="csvMappingStatus" style="font-size:0.75rem; color:var(--success);"></span>
                         <button class="btn btn-sm btn-outline" id="clearCsvBtn">Remove</button>
                     </div>
+
+                    <div id="csvValidationErrors" style="display:none;" class="error-detail"></div>
 
                     <div class="csv-actions">
                         <button class="btn btn-primary" id="previewCsvBtn" disabled>Preview CSV</button>
                         <button class="btn btn-success" id="importCsvBtn" disabled>Import All</button>
                     </div>
+
+                    <div id="csvImportStats" class="csv-import-stats" style="display:none;"></div>
                 </div>
 
                 <!-- Dataset Table -->
@@ -985,9 +984,7 @@
                         <span id="recordCount" style="font-weight:400; font-size:0.8rem; color:var(--text-muted); margin-left:0.6rem;"></span>
                     </div>
                     <div id="dataTableContainer">
-                        <div class="empty-state">
-                            No records added yet. Please input student data above, load sample data, or import a CSV.
-                        </div>
+                        <div class="empty-state">No records added yet. Please input student data above, load sample data, or import a CSV.</div>
                     </div>
                 </div>
             </section>
@@ -1002,15 +999,9 @@
                 </div>
                 <div class="card">
                     <div class="card-title">Correlation &amp; Variance Metrics</div>
-                    <div class="alert alert-info">
-                        This module computes the Pearson correlation coefficient between AI Dependency Index and GWA, and the Chi-Square statistic to test for independence between academic strand and AI tool preference.
-                    </div>
+                    <div class="alert alert-info">This module computes the Pearson correlation coefficient between AI Dependency Index and GWA, and the Chi-Square statistic to test for independence between academic strand and AI tool preference.</div>
                     <button class="btn btn-primary" id="runStatsBtn">Compute Statistics</button>
-                    <div id="statsResults" style="margin-top:1.25rem;">
-                        <div class="empty-state">
-                            Click the button to compute metrics based on the encoded dataset.
-                        </div>
-                    </div>
+                    <div id="statsResults" style="margin-top:1.25rem;"><div class="empty-state">Click the button to compute metrics based on the encoded dataset.</div></div>
                 </div>
             </section>
 
@@ -1028,29 +1019,15 @@
                         <button class="toggle-btn active" id="regressionToggle">Regression (Exact GWA)</button>
                         <button class="toggle-btn" id="classificationToggle">Classification (Risk Tiers)</button>
                     </div>
-
                     <div id="regressionPanel">
-                        <div class="alert alert-info">
-                            <strong>Algorithm:</strong> Linear Regression. <strong>Target:</strong> Continuous GWA prediction based on AI Dependency Index. Evaluation metrics include Mean Absolute Error and R-squared.
-                        </div>
+                        <div class="alert alert-info"><strong>Algorithm:</strong> Linear Regression. <strong>Target:</strong> Continuous GWA prediction based on AI Dependency Index. Evaluation metrics include Mean Absolute Error and R-squared.</div>
                         <button class="btn btn-primary" id="runRegressionBtn">Train Regression Model</button>
-                        <div id="regressionResults" style="margin-top:1.25rem;">
-                            <div class="empty-state">
-                                Model not trained. Ensure dataset contains sufficient records.
-                            </div>
-                        </div>
+                        <div id="regressionResults" style="margin-top:1.25rem;"><div class="empty-state">Model not trained. Ensure dataset contains sufficient records.</div></div>
                     </div>
-
                     <div id="classificationPanel" style="display: none;">
-                        <div class="alert alert-info">
-                            <strong>Algorithm:</strong> Rule-based Classification. <strong>Target:</strong> High Academic Risk (below 85), Average (85–89.99), Excellent (90 and above). Evaluation metrics include Accuracy, Precision, Recall, and F1-Score.
-                        </div>
+                        <div class="alert alert-info"><strong>Algorithm:</strong> Rule-based Classification. <strong>Target:</strong> High Academic Risk (below 85), Average (85–89.99), Excellent (90 and above).</div>
                         <button class="btn btn-primary" id="runClassificationBtn">Train Classification Model</button>
-                        <div id="classificationResults" style="margin-top:1.25rem;">
-                            <div class="empty-state">
-                                Model not trained. Ensure dataset contains sufficient records.
-                            </div>
-                        </div>
+                        <div id="classificationResults" style="margin-top:1.25rem;"><div class="empty-state">Model not trained. Ensure dataset contains sufficient records.</div></div>
                     </div>
                 </div>
             </section>
@@ -1065,10 +1042,7 @@
                 </div>
                 <div class="card">
                     <div class="card-title">AI Impact Estimator</div>
-                    <div class="alert alert-info">
-                        This estimator uses the trained regression model (when available) or a heuristic baseline to project the expected GWA based on the user's AI usage profile. Adjust the parameters below to observe the projected outcome.
-                    </div>
-
+                    <div class="alert alert-info">Uses the trained regression model (when available) or a heuristic baseline. Adjust parameters below to observe the projected outcome.</div>
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Frequency of AI Use (1 = Rare, 5 = Daily)</label>
@@ -1079,43 +1053,22 @@
                         </div>
                         <div class="form-group">
                             <label>Primary AI Tool</label>
-                            <select id="estTool">
-                                <option value="Generative AI">Generative AI</option>
-                                <option value="Grammar/Spell Check">Grammar / Spell Check</option>
-                                <option value="Research Assistant">Research Assistant</option>
-                                <option value="Code Generator">Code Generator</option>
-                            </select>
+                            <select id="estTool"><option value="Generative AI">Generative AI</option><option value="Grammar/Spell Check">Grammar / Spell Check</option><option value="Research Assistant">Research Assistant</option><option value="Code Generator">Code Generator</option></select>
                         </div>
                         <div class="form-group">
                             <label>Primary Purpose</label>
-                            <select id="estPurpose">
-                                <option value="Assignment Completion">Assignment Completion</option>
-                                <option value="Concept Understanding">Concept Understanding</option>
-                                <option value="Exam Preparation">Exam Preparation</option>
-                                <option value="Creative Generation">Creative Generation</option>
-                            </select>
+                            <select id="estPurpose"><option value="Assignment Completion">Assignment Completion</option><option value="Concept Understanding">Concept Understanding</option><option value="Exam Preparation">Exam Preparation</option><option value="Creative Generation">Creative Generation</option></select>
                         </div>
                         <div class="form-group">
                             <label>Academic Strand</label>
-                            <select id="estStrand">
-                                <option value="STEM">STEM</option>
-                                <option value="HUMSS">HUMSS</option>
-                                <option value="TVL">TVL</option>
-                                <option value="ABM">ABM</option>
-                            </select>
+                            <select id="estStrand"><option value="STEM">STEM</option><option value="HUMSS">HUMSS</option><option value="TVL">TVL</option><option value="ABM">ABM</option></select>
                         </div>
                     </div>
-
                     <div class="btn-group">
                         <button class="btn btn-primary" id="estimateBtn">Compute Estimation</button>
                         <button class="btn btn-outline" id="resetEstimateBtn">Reset</button>
                     </div>
-
-                    <div id="estimationOutput">
-                        <div class="empty-state">
-                            Adjust the parameters and click Compute Estimation to view the projected GWA.
-                        </div>
-                    </div>
+                    <div id="estimationOutput"><div class="empty-state">Adjust the parameters and click Compute Estimation to view the projected GWA.</div></div>
                 </div>
             </section>
 
@@ -1130,44 +1083,14 @@
                 <div class="card">
                     <div class="card-title">System Architecture &amp; Toolchain</div>
                     <table class="tool-table">
-                        <thead>
-                            <tr>
-                                <th>System Component</th>
-                                <th>Recommended Tools</th>
-                                <th>Operational Purpose</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>System Component</th><th>Recommended Tools</th><th>Operational Purpose</th></tr></thead>
                         <tbody>
-                            <tr>
-                                <td>Data Collection</td>
-                                <td>Google Forms / Microsoft Forms</td>
-                                <td>Secure surveying and automated response logging</td>
-                            </tr>
-                            <tr>
-                                <td>Analytics Environment</td>
-                                <td>Google Colab / Jupyter Notebooks</td>
-                                <td>Cloud-based Python execution environment</td>
-                            </tr>
-                            <tr>
-                                <td>Core ML Libraries</td>
-                                <td>scikit-learn, pandas, numpy</td>
-                                <td>Execution of regression and classification algorithms</td>
-                            </tr>
-                            <tr>
-                                <td>Data Visualization</td>
-                                <td>seaborn, matplotlib</td>
-                                <td>Generation of correlation matrices and feature charts</td>
-                            </tr>
-                            <tr>
-                                <td>Database Management</td>
-                                <td>PostgreSQL / SQLite</td>
-                                <td>Anonymized storage of student records and GWA</td>
-                            </tr>
-                            <tr>
-                                <td>Deployment</td>
-                                <td>Flask / FastAPI</td>
-                                <td>RESTful API hosting for the estimation service</td>
-                            </tr>
+                            <tr><td>Data Collection</td><td>Google Forms / Microsoft Forms</td><td>Secure surveying and automated response logging</td></tr>
+                            <tr><td>Analytics Environment</td><td>Google Colab / Jupyter Notebooks</td><td>Cloud-based Python execution environment</td></tr>
+                            <tr><td>Core ML Libraries</td><td>scikit-learn, pandas, numpy</td><td>Execution of regression and classification algorithms</td></tr>
+                            <tr><td>Data Visualization</td><td>seaborn, matplotlib</td><td>Generation of correlation matrices and feature charts</td></tr>
+                            <tr><td>Database Management</td><td>PostgreSQL / SQLite</td><td>Anonymized storage of student records and GWA</td></tr>
+                            <tr><td>Deployment</td><td>Flask / FastAPI</td><td>RESTful API hosting for the estimation service</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1176,7 +1099,7 @@
         </main>
     </div>
 
-    <!-- ─── PREVIEW MODAL CONTAINER ─── -->
+    <!-- ─── PREVIEW MODAL ─── -->
     <div id="previewModalContainer"></div>
 
     <script>
@@ -1188,31 +1111,34 @@
         let parsedCsvData = [];
         let csvHeaders = [];
         let selectedFile = null;
+        let importStats = { added: 0, skipped: 0, errors: [] };
 
         /* ============================================================
            DOM REFS
            ============================================================ */
         const $ = id => document.getElementById(id);
-        const studentId = $('studentId');
-        const age = $('age');
-        const sex = $('sex');
-        const strand = $('strand');
-        const aiTool = $('aiTool');
-        const frequency = $('frequency');
-        const purpose = $('purpose');
-        const gwa = $('gwa');
-
-        const dataTableContainer = $('dataTableContainer');
-        const recordCount = $('recordCount');
-
-        const csvFileInput = $('csvFileInput');
-        const csvDropZone = $('csvDropZone');
-        const csvFileInfo = $('csvFileInfo');
-        const csvFileName = $('csvFileName');
-        const csvRowCount = $('csvRowCount');
-        const clearCsvBtn = $('clearCsvBtn');
-        const previewCsvBtn = $('previewCsvBtn');
-        const importCsvBtn = $('importCsvBtn');
+        const studentId = $('studentId'),
+            age = $('age'),
+            sex = $('sex'),
+            strand = $('strand'),
+            aiTool = $('aiTool'),
+            frequency = $('frequency'),
+            purpose = $('purpose'),
+            gwa = $('gwa');
+        const dataTableContainer = $('dataTableContainer'),
+            recordCount = $('recordCount');
+        const csvFileInput = $('csvFileInput'),
+            csvDropZone = $('csvDropZone');
+        const csvFileInfo = $('csvFileInfo'),
+            csvFileName = $('csvFileName'),
+            csvRowCount = $('csvRowCount'),
+            csvColCount = $('csvColCount');
+        const csvMappingStatus = $('csvMappingStatus'),
+            csvValidationErrors = $('csvValidationErrors');
+        const clearCsvBtn = $('clearCsvBtn'),
+            previewCsvBtn = $('previewCsvBtn'),
+            importCsvBtn = $('importCsvBtn');
+        const csvImportStats = $('csvImportStats');
 
         /* ============================================================
            NAVIGATION
@@ -1241,7 +1167,6 @@
             return 'badge-risk';
         }
 
-        // Fixed alert – uses prepend to avoid insertBefore errors
         function showAlert(message, type = 'warning') {
             const existing = document.querySelector('.alert-' + type);
             if (existing) existing.remove();
@@ -1250,7 +1175,7 @@
             div.textContent = message;
             const main = document.querySelector('.main-content');
             main.prepend(div);
-            setTimeout(() => div.remove(), 5000);
+            setTimeout(() => div.remove(), 6000);
         }
 
         function clearForm() {
@@ -1272,51 +1197,34 @@
            RENDER TABLE
            ============================================================ */
         function renderTable() {
-            const container = dataTableContainer;
             updateRecordCount();
-
             if (dataset.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        No records added yet. Please input student data above, load sample data, or import a CSV.
-                    </div>
-                `;
+                dataTableContainer.innerHTML =
+                    `<div class="empty-state">No records added yet. Please input student data above, load sample data, or import a CSV.</div>`;
                 return;
             }
-
-            let html = `<div class="table-scroll"><table>
-            <thead><tr>
+            let html = `<div class="table-scroll"><table><thead><tr>
               <th>ID</th><th>Age</th><th>Sex</th><th>Strand</th><th>AI Tool</th>
               <th>Freq</th><th>Purpose</th><th>GWA</th><th>Tier</th><th style="width:60px;">Action</th>
             </tr></thead><tbody>`;
-
             dataset.forEach((r, idx) => {
                 const tier = getTier(r.gwa);
-                const cls = getTierClass(tier);
                 html += `<tr>
-              <td>${r.id}</td>
-              <td>${r.age}</td>
-              <td>${r.sex}</td>
-              <td>${r.strand}</td>
-              <td>${r.aiTool}</td>
-              <td>${r.frequency}</td>
-              <td>${r.purpose}</td>
+              <td>${r.id}</td><td>${r.age}</td><td>${r.sex}</td><td>${r.strand}</td>
+              <td>${r.aiTool}</td><td>${r.frequency}</td><td>${r.purpose}</td>
               <td>${r.gwa.toFixed(2)}</td>
-              <td><span class="badge ${cls}">${tier}</span></td>
+              <td><span class="badge ${getTierClass(tier)}">${tier}</span></td>
               <td><button class="btn btn-danger btn-sm" onclick="deleteRecord(${idx})">Delete</button></td>
             </tr>`;
             });
-
             html += '</tbody></table></div>';
-            container.innerHTML = html;
+            dataTableContainer.innerHTML = html;
         }
 
         window.deleteRecord = function(index) {
-            if (confirm('Delete this record?')) {
-                dataset.splice(index, 1);
+            if (confirm('Delete this record?')) { dataset.splice(index, 1);
                 renderTable();
-                showAlert('Record deleted.', 'success');
-            }
+                showAlert('Record deleted.', 'success'); }
         };
 
         /* ============================================================
@@ -1336,46 +1244,24 @@
                 showAlert('Please complete all fields before adding a record.', 'warning');
                 return;
             }
-            if (dataset.some(r => r.id === id)) {
-                showAlert('A record with this Student ID already exists.', 'warning');
-                return;
-            }
-            if (freqVal < 1 || freqVal > 5) {
-                showAlert('Frequency must be between 1 and 5.', 'warning');
-                return;
-            }
-            if (gwaVal < 70 || gwaVal > 100) {
-                showAlert('GWA must be between 70 and 100.', 'warning');
-                return;
-            }
+            if (dataset.some(r => r.id === id)) { showAlert('A record with this Student ID already exists.', 'warning'); return; }
+            if (freqVal < 1 || freqVal > 5) { showAlert('Frequency must be between 1 and 5.', 'warning'); return; }
+            if (gwaVal < 70 || gwaVal > 100) { showAlert('GWA must be between 70 and 100.', 'warning'); return; }
 
-            dataset.push({
-                id: id,
-                age: ageVal,
-                sex: sexVal,
-                strand: strandVal,
-                aiTool: aiToolVal,
-                frequency: freqVal,
-                purpose: purposeVal,
-                gwa: gwaVal,
-                aiDependencyIndex: freqVal
-            });
-
+            dataset.push({ id, age: ageVal, sex: sexVal, strand: strandVal, aiTool: aiToolVal, frequency: freqVal,
+                purpose: purposeVal, gwa: gwaVal, aiDependencyIndex: freqVal });
             renderTable();
             clearForm();
             showAlert(`Record ${id} added successfully.`, 'success');
         });
 
         $('clearFormBtn').addEventListener('click', clearForm);
-
         $('clearAllBtn').addEventListener('click', () => {
             if (dataset.length === 0) return;
-            if (confirm('Are you sure you want to delete ALL records? This cannot be undone.')) {
-                dataset = [];
+            if (confirm('Delete ALL records? This cannot be undone.')) { dataset = [];
                 trainedModel = null;
                 renderTable();
-                showAlert('All records cleared.', 'success');
-            }
+                showAlert('All records cleared.', 'success'); }
         });
 
         $('loadSampleBtn').addEventListener('click', () => {
@@ -1405,23 +1291,26 @@
                 { id: '20260012', age: 17, sex: 'Male', strand: 'ABM', aiTool: 'Research Assistant', frequency: 2,
                     purpose: 'Concept Understanding', gwa: 93.00 }
             ];
-
             let added = 0;
             sampleData.forEach(record => {
                 record.aiDependencyIndex = record.frequency;
-                if (!dataset.some(r => r.id === record.id)) {
-                    dataset.push(record);
-                    added++;
-                }
+                if (!dataset.some(r => r.id === record.id)) { dataset.push(record);
+                    added++; }
             });
             renderTable();
             showAlert(`Loaded ${added} sample records.`, 'success');
         });
 
         /* ============================================================
-           CSV PARSER (robust)
+           CSV PARSER — FIXED: handles \r\n, BOM, empty fields, quotes
            ============================================================ */
         function parseCSV(text) {
+            // Remove BOM if present
+            if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+
+            // Normalize line endings: \r\n → \n, \r → \n
+            text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
             const lines = [];
             let current = '';
             let insideQuotes = false;
@@ -1456,24 +1345,33 @@
             }
             if (field) headers.push(field.trim());
 
-            // Parse rows
+            // Parse rows — always push all fields (including empty trailing ones)
             const data = [];
             for (let r = 1; r < lines.length; r++) {
                 const row = lines[r];
-                if (!row.trim()) continue;
+                if (!row.trim() && row.length === 0) continue;
                 const fields = [];
                 let f = '';
                 let inQ2 = false;
+                let lastWasComma = false;
                 for (let i = 0; i < row.length; i++) {
                     const ch = row[i];
-                    if (ch === '"') { inQ2 = !inQ2; } else if (ch === ',' && !inQ2) {
+                    if (ch === '"') {
+                        inQ2 = !inQ2;
+                    } else if (ch === ',' && !inQ2) {
                         fields.push(f.trim());
                         f = '';
+                        lastWasComma = true;
                     } else {
                         f += ch;
+                        lastWasComma = false;
                     }
                 }
-                if (f) fields.push(f.trim());
+                // Always push the last field (even if empty)
+                fields.push(f.trim());
+
+                // If we have trailing commas, fields may be shorter than headers — pad with empty strings
+                while (fields.length < headers.length) fields.push('');
 
                 const obj = {};
                 headers.forEach((h, idx) => {
@@ -1481,40 +1379,78 @@
                 });
                 data.push(obj);
             }
-
             return { headers, data };
         }
 
         /* ============================================================
-           CSV UPLOAD – Drag & Drop + File Input
+           COLUMN MAPPING — with synonyms for flexible matching
+           ============================================================ */
+        const COLUMN_SYNONYMS = {
+            id: ['id', 'student id', 'studentid', 'student_id', 'studentnumber', 'student number', 'stuid', 'uid',
+                'identifier'
+            ],
+            age: ['age', 'ages', 'student age', 'age_years'],
+            sex: ['sex', 'gender', 'gender identity', 'sex assigned at birth'],
+            strand: ['strand', 'academic strand', 'track', 'program', 'course', 'major', 'strand/track'],
+            aiTool: ['aitool', 'ai tool', 'ai_tool', 'primary ai tool', 'ai tool used', 'tool', 'ai assistant',
+                'generative ai tool'
+            ],
+            frequency: ['frequency', 'freq', 'ai frequency', 'usage frequency', 'use frequency', 'frequency of use',
+                'how often'
+            ],
+            purpose: ['purpose', 'primary purpose', 'ai purpose', 'usage purpose', 'intended use', 'goal'],
+            gwa: ['gwa', 'general weighted average', 'grade', 'average grade', 'academic average', 'gpa', 'general average']
+        };
+
+        function mapColumns(headers) {
+            const map = {};
+            const lowerHeaders = headers.map(h => h.toLowerCase().trim().replace(/[^a-z0-9]/g, ''));
+
+            for (const [field, synonyms] of Object.entries(COLUMN_SYNONYMS)) {
+                const cleanSynonyms = synonyms.map(s => s.toLowerCase().trim().replace(/[^a-z0-9]/g, ''));
+                let found = false;
+                for (let i = 0; i < lowerHeaders.length; i++) {
+                    const h = lowerHeaders[i];
+                    if (cleanSynonyms.some(syn => h === syn || h.includes(syn) || syn.includes(h))) {
+                        map[field] = headers[i];
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    // Try partial match on original headers (more forgiving)
+                    const origLower = headers.map(h => h.toLowerCase().trim());
+                    for (let i = 0; i < origLower.length; i++) {
+                        const h = origLower[i];
+                        if (synonyms.some(syn => h.includes(syn) || syn.includes(h))) {
+                            map[field] = headers[i];
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!found) map[field] = null;
+            }
+            return map;
+        }
+
+        /* ============================================================
+           CSV UPLOAD — Drag & Drop + File Input
            ============================================================ */
         csvDropZone.addEventListener('click', () => csvFileInput.click());
 
-        csvDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            csvDropZone.classList.add('dragover');
-        });
-
-        csvDropZone.addEventListener('dragleave', () => {
-            csvDropZone.classList.remove('dragover');
-        });
-
+        csvDropZone.addEventListener('dragover', (e) => { e.preventDefault();
+            csvDropZone.classList.add('dragover'); });
+        csvDropZone.addEventListener('dragleave', () => { csvDropZone.classList.remove('dragover'); });
         csvDropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             csvDropZone.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) {
-                handleFile(e.dataTransfer.files[0]);
-            }
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
         });
-
-        csvFileInput.addEventListener('change', () => {
-            if (csvFileInput.files.length > 0) {
-                handleFile(csvFileInput.files[0]);
-            }
-        });
+        csvFileInput.addEventListener('change', () => { if (csvFileInput.files.length > 0) handleFile(csvFileInput.files[0]); });
 
         function handleFile(file) {
-            if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+            if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
                 showAlert('Please upload a valid CSV file.', 'danger');
                 return;
             }
@@ -1524,7 +1460,7 @@
                 const text = e.target.result;
                 const parsed = parseCSV(text);
                 if (parsed.data.length === 0) {
-                    showAlert('CSV is empty or could not be parsed.', 'danger');
+                    showAlert('CSV is empty or could not be parsed. Check that it has a header row.', 'danger');
                     return;
                 }
                 parsedCsvData = parsed.data;
@@ -1532,15 +1468,34 @@
 
                 csvFileName.textContent = file.name;
                 csvRowCount.textContent = parsedCsvData.length;
+                csvColCount.textContent = csvHeaders.length;
+
+                // Check column mapping
+                const map = mapColumns(csvHeaders);
+                const missing = Object.entries(map).filter(([k, v]) => !v).map(([k]) => k);
+                const found = Object.entries(map).filter(([k, v]) => v).map(([k, v]) => `${k} → "${v}"`);
+
+                if (missing.length === 0) {
+                    csvMappingStatus.textContent = '✅ All columns matched';
+                    csvMappingStatus.style.color = 'var(--success)';
+                    csvValidationErrors.style.display = 'none';
+                    previewCsvBtn.disabled = false;
+                    importCsvBtn.disabled = false;
+                    showAlert(`CSV ready: ${parsedCsvData.length} rows, all required columns found.`, 'success');
+                } else {
+                    csvMappingStatus.textContent = `⚠️ Missing: ${missing.join(', ')}`;
+                    csvMappingStatus.style.color = 'var(--danger)';
+                    csvValidationErrors.style.display = 'block';
+                    csvValidationErrors.textContent =
+                        `Could not find columns for: ${missing.join(', ')}. Expected: id, age, sex, strand, aiTool, frequency, purpose, gwa. Check your header row.`;
+                    previewCsvBtn.disabled = false; // Allow preview to debug
+                    importCsvBtn.disabled = true;
+                    showAlert(`Column mapping incomplete. Missing: ${missing.join(', ')}`, 'warning');
+                }
+
                 csvFileInfo.style.display = 'flex';
-                previewCsvBtn.disabled = false;
-                importCsvBtn.disabled = false;
-                showAlert(`CSV parsed: ${parsedCsvData.length} rows, ${csvHeaders.length} columns. Click "Preview CSV" to review.`,
-                    'success');
             };
-            reader.onerror = () => {
-                showAlert('Error reading file.', 'danger');
-            };
+            reader.onerror = () => { showAlert('Error reading file.', 'danger'); };
             reader.readAsText(file);
         }
 
@@ -1552,34 +1507,28 @@
             csvFileInfo.style.display = 'none';
             previewCsvBtn.disabled = true;
             importCsvBtn.disabled = true;
+            csvValidationErrors.style.display = 'none';
+            csvImportStats.style.display = 'none';
             showAlert('CSV cleared.', 'info');
         });
 
         /* ============================================================
-           PREVIEW CSV – Modal
+           PREVIEW CSV — Modal
            ============================================================ */
         previewCsvBtn.addEventListener('click', () => {
-            if (parsedCsvData.length === 0) {
-                showAlert('No CSV data to preview. Please upload a CSV file first.', 'warning');
-                return;
-            }
+            if (parsedCsvData.length === 0) { showAlert('No CSV data to preview.', 'warning'); return; }
             showPreviewModal(parsedCsvData, csvHeaders);
         });
 
         function showPreviewModal(data, headers) {
-            const container = document.getElementById('previewModalContainer');
-
+            const container = $('previewModalContainer');
             let tableHtml = `<div class="table-scroll"><table><thead><tr>`;
             headers.forEach(h => { tableHtml += `<th>${h}</th>`; });
             tableHtml += '</tr></thead><tbody>';
-
             const previewRows = data.slice(0, 100);
             previewRows.forEach(row => {
                 tableHtml += '<tr>';
-                headers.forEach(h => {
-                    const val = row[h] !== undefined ? row[h] : '';
-                    tableHtml += `<td>${val}</td>`;
-                });
+                headers.forEach(h => { tableHtml += `<td>${row[h] !== undefined ? row[h] : ''}</td>`; });
                 tableHtml += '</tr>';
             });
             if (data.length > 100) {
@@ -1588,83 +1537,55 @@
             }
             tableHtml += '</tbody></table></div>';
 
-            const totalRows = data.length;
-
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
             modal.id = 'previewModal';
             modal.innerHTML = `
             <div class="modal">
               <div class="modal-header">
-                <h3>CSV Preview — ${totalRows} row${totalRows !== 1 ? 's' : ''}</h3>
+                <h3>CSV Preview — ${data.length} row${data.length !== 1 ? 's' : ''}, ${headers.length} columns</h3>
                 <button class="modal-close" id="previewModalClose">&times;</button>
               </div>
-              <div class="modal-body">
-                ${tableHtml}
-              </div>
+              <div class="modal-body">${tableHtml}</div>
               <div class="modal-footer">
                 <button class="btn btn-outline" id="previewModalCancel">Close</button>
-                <button class="btn btn-success" id="previewModalImport">Import All Data</button>
+                <button class="btn btn-success" id="previewModalImport" ${importCsvBtn.disabled ? 'disabled' : ''}>Import All Data</button>
               </div>
             </div>
           `;
-
             container.appendChild(modal);
 
             const closeModal = () => modal.remove();
             document.getElementById('previewModalClose').addEventListener('click', closeModal);
             document.getElementById('previewModalCancel').addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
             document.getElementById('previewModalImport').addEventListener('click', () => {
-                doImportCsv();
-                closeModal();
+                if (!importCsvBtn.disabled) { doImportCsv();
+                    closeModal(); } else { showAlert('Please fix column mapping before importing.', 'warning'); }
             });
         }
 
         /* ============================================================
-           IMPORT CSV (FIXED)
+           IMPORT CSV — FIXED with robust mapping and validation
            ============================================================ */
         importCsvBtn.addEventListener('click', doImportCsv);
 
         function doImportCsv() {
-            if (parsedCsvData.length === 0) {
-                showAlert('No CSV data to import.', 'warning');
-                return;
-            }
+            if (parsedCsvData.length === 0) { showAlert('No CSV data to import.', 'warning'); return; }
 
-            // Flexible column mapping
-            const expected = ['id', 'age', 'sex', 'strand', 'aiTool', 'frequency', 'purpose', 'gwa'];
-            const map = {};
-            const lowerHeaders = csvHeaders.map(h => h.toLowerCase().trim().replace(/[^a-z0-9]/g, ''));
-
-            expected.forEach(field => {
-                const cleanField = field.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const idx = lowerHeaders.findIndex(h => h === cleanField);
-                if (idx !== -1) {
-                    map[field] = csvHeaders[idx];
-                } else {
-                    // try partial match
-                    const partialIdx = lowerHeaders.findIndex(h => h.includes(cleanField) || cleanField.includes(h));
-                    if (partialIdx !== -1) {
-                        map[field] = csvHeaders[partialIdx];
-                    }
-                }
-            });
-
-            // Verify required columns
-            const missing = expected.filter(f => !map[f]);
+            const map = mapColumns(csvHeaders);
+            const missing = Object.entries(map).filter(([k, v]) => !v).map(([k]) => k);
             if (missing.length > 0) {
-                showAlert(`Could not find columns for: ${missing.join(', ')}. Please check your CSV headers.`, 'danger');
+                showAlert(`Cannot import: missing columns for ${missing.join(', ')}.`, 'danger');
                 return;
             }
 
-            let added = 0;
-            let skipped = 0;
+            let added = 0,
+                skipped = 0;
+            const errors = [];
 
-            parsedCsvData.forEach(row => {
+            parsedCsvData.forEach((row, idx) => {
                 const rawId = String(row[map.id] || '').trim();
                 const rawAge = parseFloat(row[map.age]);
                 const rawSex = String(row[map.sex] || '').trim();
@@ -1674,14 +1595,29 @@
                 const rawPurpose = String(row[map.purpose] || '').trim();
                 const rawGwa = parseFloat(row[map.gwa]);
 
-                if (!rawId || isNaN(rawAge) || !rawSex || !rawStrand || !rawAiTool || isNaN(rawFreq) || !rawPurpose ||
-                    isNaN(rawGwa)) {
-                    skipped++;
-                    return;
-                }
-                if (rawFreq < 1 || rawFreq > 5) { skipped++; return; }
-                if (rawGwa < 70 || rawGwa > 100) { skipped++; return; }
-                if (dataset.some(r => r.id === rawId)) { skipped++; return; }
+                // Validation
+                const rowNum = idx + 2;
+                if (!rawId) { errors.push(`Row ${rowNum}: missing ID`);
+                    skipped++; return; }
+                if (isNaN(rawAge) || rawAge < 10 || rawAge > 30) { errors.push(`Row ${rowNum}: invalid age (${rawAge})`);
+                    skipped++; return; }
+                if (!['Male', 'Female'].includes(rawSex)) { errors.push(`Row ${rowNum}: invalid sex "${rawSex}"`);
+                    skipped++; return; }
+                if (!['HUMSS', 'TVL', 'STEM', 'ABM'].includes(rawStrand)) { errors.push(
+                        `Row ${rowNum}: invalid strand "${rawStrand}"`);
+                    skipped++; return; }
+                if (!rawAiTool) { errors.push(`Row ${rowNum}: missing AI tool`);
+                    skipped++; return; }
+                if (isNaN(rawFreq) || rawFreq < 1 || rawFreq > 5) { errors.push(
+                        `Row ${rowNum}: frequency must be 1-5 (got ${rawFreq})`);
+                    skipped++; return; }
+                if (!rawPurpose) { errors.push(`Row ${rowNum}: missing purpose`);
+                    skipped++; return; }
+                if (isNaN(rawGwa) || rawGwa < 70 || rawGwa > 100) { errors.push(
+                        `Row ${rowNum}: GWA must be 70-100 (got ${rawGwa})`);
+                    skipped++; return; }
+                if (dataset.some(r => r.id === rawId)) { errors.push(`Row ${rowNum}: duplicate ID "${rawId}"`);
+                    skipped++; return; }
 
                 dataset.push({
                     id: rawId,
@@ -1699,13 +1635,35 @@
 
             renderTable();
 
-            if (added > 0) {
-                showAlert(`Imported ${added} records from CSV. ${skipped} rows skipped (invalid or duplicate).`, 'success');
-            } else {
-                showAlert(`No records were imported. ${skipped} rows were skipped.`, 'warning');
+            // Show stats
+            importStats = { added, skipped, errors };
+            if (added > 0 || skipped > 0) {
+                csvImportStats.style.display = 'grid';
+                csvImportStats.innerHTML = `
+              <div class="stat-item"><strong>${added}</strong> Imported</div>
+              <div class="stat-item"><strong>${skipped}</strong> Skipped</div>
+              <div class="stat-item"><strong>${errors.length}</strong> Issues</div>
+            `;
             }
 
-            // Clear CSV state
+            if (added > 0) {
+                showAlert(`Imported ${added} record${added !== 1 ? 's' : ''} from CSV. ${skipped} row${skipped !== 1 ? 's' : ''} skipped.`,
+                    'success');
+            } else {
+                showAlert(`No records imported. ${skipped} rows had errors. Check validation details.`, 'warning');
+            }
+
+            if (errors.length > 0 && errors.length <= 10) {
+                csvValidationErrors.style.display = 'block';
+                csvValidationErrors.textContent = '⚠️ ' + errors.join('; ');
+            } else if (errors.length > 10) {
+                csvValidationErrors.style.display = 'block';
+                csvValidationErrors.textContent = `⚠️ ${errors.length} errors (first 10 shown): ${errors.slice(0, 10).join('; ')} …`;
+            } else {
+                csvValidationErrors.style.display = 'none';
+            }
+
+            // Clear CSV state after import
             selectedFile = null;
             parsedCsvData = [];
             csvHeaders = [];
@@ -1716,58 +1674,64 @@
         }
 
         /* ============================================================
+           DOWNLOAD CSV TEMPLATE
+           ============================================================ */
+        $('downloadTemplateBtn').addEventListener('click', () => {
+            const headers = ['id', 'age', 'sex', 'strand', 'aiTool', 'frequency', 'purpose', 'gwa'];
+            const sampleRow = ['20260001', '16', 'Female', 'STEM', 'Generative AI', '4', 'Assignment Completion', '88.5'];
+            const csvContent = headers.join(',') + '\n' + sampleRow.join(',') + '\n';
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'apad_template.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            showAlert('Template downloaded. Use these exact column names for best results.', 'success');
+        });
+
+        /* ============================================================
            STATISTICAL ANALYSIS
            ============================================================ */
         function calculatePearson(x, y) {
             const n = x.length;
-            let sumX = 0,
-                sumY = 0,
-                sumXY = 0,
-                sumX2 = 0,
-                sumY2 = 0;
-            for (let i = 0; i < n; i++) {
-                sumX += x[i];
-                sumY += y[i];
-                sumXY += x[i] * y[i];
-                sumX2 += x[i] * x[i];
-                sumY2 += y[i] * y[i];
-            }
-            const numerator = (n * sumXY) - (sumX * sumY);
-            const denominator = Math.sqrt(((n * sumX2) - (sumX * sumX)) * ((n * sumY2) - (sumY * sumY)));
-            return denominator === 0 ? 0 : numerator / denominator;
+            let sx = 0,
+                sy = 0,
+                sxy = 0,
+                sx2 = 0,
+                sy2 = 0;
+            for (let i = 0; i < n; i++) { sx += x[i];
+                sy += y[i];
+                sxy += x[i] * y[i];
+                sx2 += x[i] * x[i];
+                sy2 += y[i] * y[i]; }
+            const num = (n * sxy) - (sx * sy);
+            const den = Math.sqrt(((n * sx2) - (sx * sx)) * ((n * sy2) - (sy * sy)));
+            return den === 0 ? 0 : num / den;
         }
 
         function calculateChiSquare(strands, tools) {
-            const observed = {};
-            const rowTotals = {};
-            const colTotals = {};
+            const obs = {},
+                rowTot = {},
+                colTot = {};
             let total = 0;
-
-            strands.forEach(s => {
-                observed[s] = {};
-                rowTotals[s] = 0;
-                tools.forEach(t => { observed[s][t] = 0; });
-            });
-            tools.forEach(t => colTotals[t] = 0);
-
-            dataset.forEach(d => {
-                observed[d.strand][d.aiTool]++;
-                rowTotals[d.strand]++;
-                colTotals[d.aiTool]++;
-                total++;
-            });
-
-            let chiSq = 0;
+            strands.forEach(s => { obs[s] = {};
+                rowTot[s] = 0;
+                tools.forEach(t => { obs[s][t] = 0; }); });
+            tools.forEach(t => colTot[t] = 0);
+            dataset.forEach(d => { obs[d.strand][d.aiTool]++;
+                rowTot[d.strand]++;
+                colTot[d.aiTool]++;
+                total++; });
+            let chi = 0;
             strands.forEach(s => {
                 tools.forEach(t => {
-                    const expected = (rowTotals[s] * colTotals[t]) / total;
-                    if (expected > 0) {
-                        chiSq += Math.pow(observed[s][t] - expected, 2) / expected;
-                    }
+                    const exp = (rowTot[s] * colTot[t]) / total;
+                    if (exp > 0) chi += Math.pow(obs[s][t] - exp, 2) / exp;
                 });
             });
-            const df = (strands.length - 1) * (tools.length - 1);
-            return { value: chiSq, df };
+            return { value: chi, df: (strands.length - 1) * (tools.length - 1) };
         }
 
         $('runStatsBtn').addEventListener('click', () => {
@@ -1777,43 +1741,27 @@
                     `<div class="empty-state">Insufficient data. Add at least three records to compute statistics.</div>`;
                 return;
             }
-
-            const x = dataset.map(d => d.aiDependencyIndex);
-            const y = dataset.map(d => d.gwa);
+            const x = dataset.map(d => d.aiDependencyIndex),
+                y = dataset.map(d => d.gwa);
             const pearsonR = calculatePearson(x, y);
-
             const strands = [...new Set(dataset.map(d => d.strand))];
             const tools = [...new Set(dataset.map(d => d.aiTool))];
             const chiResult = calculateChiSquare(strands, tools);
-
             const meanX = x.reduce((a, b) => a + b, 0) / x.length;
             const meanY = y.reduce((a, b) => a + b, 0) / y.length;
-
             const absR = Math.abs(pearsonR);
-            let interpretation = absR < 0.3 ? 'weak' : absR < 0.7 ? 'moderate' : 'strong';
-            const direction = pearsonR < 0 ? 'negative' : 'positive';
+            const interp = absR < 0.3 ? 'weak' : absR < 0.7 ? 'moderate' : 'strong';
+            const dir = pearsonR < 0 ? 'negative' : 'positive';
 
             container.innerHTML = `
             <div class="metrics-grid">
-              <div class="metric-card">
-                <div class="metric-value">${pearsonR.toFixed(4)}</div>
-                <div class="metric-label">Pearson r (AI Freq vs GWA)</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${chiResult.value.toFixed(4)}</div>
-                <div class="metric-label">Chi-Square Statistic</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${chiResult.df}</div>
-                <div class="metric-label">Degrees of Freedom</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${dataset.length}</div>
-                <div class="metric-label">Total Observations (N)</div>
-              </div>
+              <div class="metric-card"><div class="metric-value">${pearsonR.toFixed(4)}</div><div class="metric-label">Pearson r (AI Freq vs GWA)</div></div>
+              <div class="metric-card"><div class="metric-value">${chiResult.value.toFixed(4)}</div><div class="metric-label">Chi-Square Statistic</div></div>
+              <div class="metric-card"><div class="metric-value">${chiResult.df}</div><div class="metric-label">Degrees of Freedom</div></div>
+              <div class="metric-card"><div class="metric-value">${dataset.length}</div><div class="metric-label">Total Observations (N)</div></div>
             </div>
             <div class="stat-interpretation">
-              <strong>Interpretation:</strong> The Pearson correlation coefficient of <strong>${pearsonR.toFixed(4)}</strong> indicates a <strong>${interpretation}</strong> ${direction} relationship between AI usage frequency and GWA.
+              <strong>Interpretation:</strong> The Pearson correlation coefficient of <strong>${pearsonR.toFixed(4)}</strong> indicates a <strong>${interp}</strong> ${dir} relationship between AI usage frequency and GWA.
               The mean AI Dependency Index is <strong>${meanX.toFixed(2)}</strong> and the mean GWA is <strong>${meanY.toFixed(2)}</strong>.
               The Chi-Square value of <strong>${chiResult.value.toFixed(4)}</strong> with <strong>${chiResult.df}</strong> degrees of freedom evaluates the variance of tool preferences across academic strands.
             </div>
@@ -1821,12 +1769,12 @@
         });
 
         /* ============================================================
-           PREDICTIVE MODELING – Toggle
+           PREDICTIVE MODELING — Toggle
            ============================================================ */
-        const regressionToggle = $('regressionToggle');
-        const classificationToggle = $('classificationToggle');
-        const regressionPanel = $('regressionPanel');
-        const classificationPanel = $('classificationPanel');
+        const regressionToggle = $('regressionToggle'),
+            classificationToggle = $('classificationToggle');
+        const regressionPanel = $('regressionPanel'),
+            classificationPanel = $('classificationPanel');
 
         regressionToggle.addEventListener('click', () => {
             regressionToggle.classList.add('active');
@@ -1834,7 +1782,6 @@
             regressionPanel.style.display = 'block';
             classificationPanel.style.display = 'none';
         });
-
         classificationToggle.addEventListener('click', () => {
             classificationToggle.classList.add('active');
             regressionToggle.classList.remove('active');
@@ -1852,33 +1799,26 @@
                     `<div class="empty-state">Insufficient data for regression training. Add at least three records.</div>`;
                 return;
             }
-
-            const x = dataset.map(d => d.aiDependencyIndex);
-            const y = dataset.map(d => d.gwa);
+            const x = dataset.map(d => d.aiDependencyIndex),
+                y = dataset.map(d => d.gwa);
             const n = x.length;
-
-            let sumX = 0,
-                sumY = 0,
-                sumXY = 0,
-                sumX2 = 0,
-                sumY2 = 0;
-            for (let i = 0; i < n; i++) {
-                sumX += x[i];
-                sumY += y[i];
-                sumXY += x[i] * y[i];
-                sumX2 += x[i] * x[i];
-                sumY2 += y[i] * y[i];
-            }
-
-            const denom = ((n * sumX2) - (sumX * sumX));
-            const slope = denom === 0 ? 0 : ((n * sumXY) - (sumX * sumY)) / denom;
-            const intercept = (sumY - slope * sumX) / n;
-
+            let sx = 0,
+                sy = 0,
+                sxy = 0,
+                sx2 = 0,
+                sy2 = 0;
+            for (let i = 0; i < n; i++) { sx += x[i];
+                sy += y[i];
+                sxy += x[i] * y[i];
+                sx2 += x[i] * x[i];
+                sy2 += y[i] * y[i]; }
+            const denom = ((n * sx2) - (sx * sx));
+            const slope = denom === 0 ? 0 : ((n * sxy) - (sx * sy)) / denom;
+            const intercept = (sy - slope * sx) / n;
             let ssRes = 0,
-                ssTot = 0;
-            const meanY = sumY / n;
-            let mae = 0;
-
+                ssTot = 0,
+                mae = 0;
+            const meanY = sy / n;
             for (let i = 0; i < n; i++) {
                 const pred = slope * x[i] + intercept;
                 ssRes += Math.pow(y[i] - pred, 2);
@@ -1887,34 +1827,18 @@
             }
             mae /= n;
             const r2 = ssTot === 0 ? 0 : 1 - (ssRes / ssTot);
-
             trainedModel = { slope, intercept, r2, mae };
-
             container.innerHTML = `
             <div class="metrics-grid">
-              <div class="metric-card">
-                <div class="metric-value">${slope.toFixed(4)}</div>
-                <div class="metric-label">Slope (Coefficient)</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${intercept.toFixed(4)}</div>
-                <div class="metric-label">Y-Intercept</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${mae.toFixed(4)}</div>
-                <div class="metric-label">Mean Absolute Error</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${r2.toFixed(4)}</div>
-                <div class="metric-label">R-Squared</div>
-              </div>
+              <div class="metric-card"><div class="metric-value">${slope.toFixed(4)}</div><div class="metric-label">Slope</div></div>
+              <div class="metric-card"><div class="metric-value">${intercept.toFixed(4)}</div><div class="metric-label">Y-Intercept</div></div>
+              <div class="metric-card"><div class="metric-value">${mae.toFixed(4)}</div><div class="metric-label">Mean Absolute Error</div></div>
+              <div class="metric-card"><div class="metric-value">${r2.toFixed(4)}</div><div class="metric-label">R-Squared</div></div>
             </div>
             <div class="stat-interpretation" style="border-left-color:var(--success);">
               <strong>Regression Equation:</strong> Predicted GWA = ${slope.toFixed(4)} × (AI Dependency Index) + ${intercept.toFixed(4)}
             </div>
-            <div class="alert alert-success" style="margin-top:0.75rem;">
-              The model has been trained successfully. You can now use the AI Estimation module to project GWA based on AI usage parameters.
-            </div>
+            <div class="alert alert-success" style="margin-top:0.75rem;">Model trained. Use the AI Estimation module to project GWA.</div>
           `;
         });
 
@@ -1928,58 +1852,38 @@
                     `<div class="empty-state">Insufficient data for classification training. Add at least three records.</div>`;
                 return;
             }
-
             let excellent = 0,
                 average = 0,
-                risk = 0;
-            let correct = 0;
+                risk = 0,
+                correct = 0;
             let tp = 0,
                 fp = 0,
                 fn = 0,
                 tn = 0;
-
             dataset.forEach(d => {
                 const actualTier = getTier(d.gwa);
-                const predictedGWA = trainedModel ?
-                    (trainedModel.slope * d.aiDependencyIndex + trainedModel.intercept) :
+                const predGWA = trainedModel ? (trainedModel.slope * d.aiDependencyIndex + trainedModel.intercept) :
                     (d.aiDependencyIndex * -1.5 + 92);
-                const predictedTier = getTier(predictedGWA);
-
-                if (actualTier === predictedTier) correct++;
-
-                if (actualTier === 'High Academic Risk' && predictedTier === 'High Academic Risk') tp++;
-                if (actualTier !== 'High Academic Risk' && predictedTier === 'High Academic Risk') fp++;
-                if (actualTier === 'High Academic Risk' && predictedTier !== 'High Academic Risk') fn++;
-                if (actualTier !== 'High Academic Risk' && predictedTier !== 'High Academic Risk') tn++;
-
+                const predTier = getTier(predGWA);
+                if (actualTier === predTier) correct++;
+                if (actualTier === 'High Academic Risk' && predTier === 'High Academic Risk') tp++;
+                else if (actualTier !== 'High Academic Risk' && predTier === 'High Academic Risk') fp++;
+                else if (actualTier === 'High Academic Risk' && predTier !== 'High Academic Risk') fn++;
+                else if (actualTier !== 'High Academic Risk' && predTier !== 'High Academic Risk') tn++;
                 if (actualTier === 'Excellent') excellent++;
                 else if (actualTier === 'Average') average++;
                 else risk++;
             });
-
             const accuracy = correct / dataset.length;
             const precision = (tp + fp) === 0 ? 0 : tp / (tp + fp);
             const recall = (tp + fn) === 0 ? 0 : tp / (tp + fn);
             const f1 = (precision + recall) === 0 ? 0 : 2 * ((precision * recall) / (precision + recall));
-
             container.innerHTML = `
             <div class="metrics-grid">
-              <div class="metric-card">
-                <div class="metric-value">${(accuracy * 100).toFixed(2)}%</div>
-                <div class="metric-label">Accuracy</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${precision.toFixed(4)}</div>
-                <div class="metric-label">Precision (Risk Detection)</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${recall.toFixed(4)}</div>
-                <div class="metric-label">Recall (Risk Detection)</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">${f1.toFixed(4)}</div>
-                <div class="metric-label">F1-Score</div>
-              </div>
+              <div class="metric-card"><div class="metric-value">${(accuracy * 100).toFixed(2)}%</div><div class="metric-label">Accuracy</div></div>
+              <div class="metric-card"><div class="metric-value">${precision.toFixed(4)}</div><div class="metric-label">Precision (Risk)</div></div>
+              <div class="metric-card"><div class="metric-value">${recall.toFixed(4)}</div><div class="metric-label">Recall (Risk)</div></div>
+              <div class="metric-card"><div class="metric-value">${f1.toFixed(4)}</div><div class="metric-label">F1-Score</div></div>
             </div>
             <div style="margin-top:1rem;">
               <strong>Dataset Distribution:</strong><br>
@@ -1989,8 +1893,7 @@
             </div>
             <div class="stat-interpretation" style="border-left-color:var(--info); margin-top:0.75rem;">
               <strong>Confusion Matrix (Risk Detection):</strong><br>
-              True Positives: ${tp} | False Positives: ${fp}<br>
-              False Negatives: ${fn} | True Negatives: ${tn}
+              TP: ${tp} | FP: ${fp} | FN: ${fn} | TN: ${tn}
             </div>
           `;
         });
@@ -1998,67 +1901,39 @@
         /* ============================================================
            ESTIMATION
            ============================================================ */
-        const estFrequency = $('estFrequency');
-        const estFrequencyValue = $('estFrequencyValue');
-        estFrequency.addEventListener('input', () => {
-            estFrequencyValue.textContent = estFrequency.value;
-        });
+        const estFrequency = $('estFrequency'),
+            estFrequencyValue = $('estFrequencyValue');
+        estFrequency.addEventListener('input', () => { estFrequencyValue.textContent = estFrequency.value; });
 
         $('estimateBtn').addEventListener('click', () => {
             const freq = parseInt(estFrequency.value);
-            const tool = $('estTool').value;
-            const purposeVal = $('estPurpose').value;
-            const strandVal = $('estStrand').value;
-
-            const toolWeights = {
-                'Generative AI': -0.8,
-                'Grammar/Spell Check': 0.5,
-                'Research Assistant': 0.7,
-                'Code Generator': 0.2
-            };
-            const purposeWeights = {
-                'Assignment Completion': -0.6,
-                'Concept Understanding': 0.8,
-                'Exam Preparation': 0.5,
-                'Creative Generation': 0.1
-            };
-            const strandWeights = {
-                'STEM': 0.3,
-                'HUMSS': 0.2,
-                'TVL': -0.1,
-                'ABM': 0.1
-            };
-
-            let estimatedGWA;
-            let modelSource;
-
+            const tool = $('estTool').value,
+                purposeVal = $('estPurpose').value,
+                strandVal = $('estStrand').value;
+            const toolWeights = { 'Generative AI': -0.8, 'Grammar/Spell Check': 0.5, 'Research Assistant': 0.7,
+                'Code Generator': 0.2 };
+            const purposeWeights = { 'Assignment Completion': -0.6, 'Concept Understanding': 0.8,
+                'Exam Preparation': 0.5, 'Creative Generation': 0.1 };
+            const strandWeights = { 'STEM': 0.3, 'HUMSS': 0.2, 'TVL': -0.1, 'ABM': 0.1 };
+            let estimatedGWA, modelSource;
             if (trainedModel) {
                 estimatedGWA = trainedModel.slope * freq + trainedModel.intercept;
                 estimatedGWA += (toolWeights[tool] || 0) * 0.5 + (purposeWeights[purposeVal] || 0) * 0.5 + (strandWeights[
                     strandVal] || 0) * 0.3;
                 modelSource = 'Trained Regression Model';
             } else {
-                const baseGWA = 90;
-                const frequencyEffect = (3 - freq) * 1.2;
-                estimatedGWA = baseGWA + frequencyEffect + (toolWeights[tool] || 0) + (purposeWeights[purposeVal] || 0) +
-                    (strandWeights[strandVal] || 0);
+                estimatedGWA = 90 + (3 - freq) * 1.2 + (toolWeights[tool] || 0) + (purposeWeights[purposeVal] || 0) + (
+                    strandWeights[strandVal] || 0);
                 modelSource = 'Heuristic Baseline (train regression model for improved accuracy)';
             }
-
             estimatedGWA = Math.max(70, Math.min(100, estimatedGWA));
             const tier = getTier(estimatedGWA);
-            const tierClass = getTierClass(tier);
-            const tierColor = tier === 'Excellent' ? 'var(--success)' : tier === 'Average' ? 'var(--warning)' :
-            'var(--danger)';
-
             const output = $('estimationOutput');
             output.innerHTML = `
             <div class="estimation-output">
               <div style="font-size:0.85rem; color:var(--text-secondary);">Projected General Weighted Average</div>
               <div class="estimation-value">${estimatedGWA.toFixed(2)}</div>
-              <div class="estimation-tier" style="color: ${tierColor};">
-                <span class="badge ${tierClass}">${tier}</span>
-              </div>
+              <div class="estimation-tier"><span class="badge ${getTierClass(tier)}">${tier}</span></div>
               <div class="estimation-breakdown">
                 <h4>Estimation Breakdown</h4>
                 <div class="breakdown-item"><span>AI Usage Frequency</span><span>${freq} / 5</span></div>
@@ -2078,11 +1953,8 @@
             $('estTool').value = 'Generative AI';
             $('estPurpose').value = 'Assignment Completion';
             $('estStrand').value = 'STEM';
-            $('estimationOutput').innerHTML = `
-            <div class="empty-state">
-              Adjust the parameters and click Compute Estimation to view the projected GWA.
-            </div>
-          `;
+            $('estimationOutput').innerHTML =
+                `<div class="empty-state">Adjust the parameters and click Compute Estimation to view the projected GWA.</div>`;
         });
 
         /* ============================================================
