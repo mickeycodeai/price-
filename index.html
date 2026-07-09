@@ -961,14 +961,12 @@
                     </p>
 
                     <div class="csv-upload-zone" id="csvDropZone">
-                        <span class="upload-icon">📄</span>
                         <p><strong>Drop your CSV file here</strong> or click to browse</p>
                         <span class="file-hint">Supports .csv files</span>
                         <input type="file" id="csvFileInput" accept=".csv" />
                     </div>
 
                     <div id="csvFileInfo" class="file-info" style="display: none;">
-                        <span>📄</span>
                         <span class="file-name" id="csvFileName">file.csv</span>
                         <span>(<span id="csvRowCount">0</span> rows)</span>
                         <button class="btn btn-sm btn-outline" id="clearCsvBtn">Remove</button>
@@ -988,7 +986,6 @@
                     </div>
                     <div id="dataTableContainer">
                         <div class="empty-state">
-                            <div class="empty-icon">📋</div>
                             No records added yet. Please input student data above, load sample data, or import a CSV.
                         </div>
                     </div>
@@ -1011,7 +1008,6 @@
                     <button class="btn btn-primary" id="runStatsBtn">Compute Statistics</button>
                     <div id="statsResults" style="margin-top:1.25rem;">
                         <div class="empty-state">
-                            <div class="empty-icon">📊</div>
                             Click the button to compute metrics based on the encoded dataset.
                         </div>
                     </div>
@@ -1040,7 +1036,6 @@
                         <button class="btn btn-primary" id="runRegressionBtn">Train Regression Model</button>
                         <div id="regressionResults" style="margin-top:1.25rem;">
                             <div class="empty-state">
-                                <div class="empty-icon">🧠</div>
                                 Model not trained. Ensure dataset contains sufficient records.
                             </div>
                         </div>
@@ -1053,7 +1048,6 @@
                         <button class="btn btn-primary" id="runClassificationBtn">Train Classification Model</button>
                         <div id="classificationResults" style="margin-top:1.25rem;">
                             <div class="empty-state">
-                                <div class="empty-icon">🧠</div>
                                 Model not trained. Ensure dataset contains sufficient records.
                             </div>
                         </div>
@@ -1119,7 +1113,6 @@
 
                     <div id="estimationOutput">
                         <div class="empty-state">
-                            <div class="empty-icon">📈</div>
                             Adjust the parameters and click Compute Estimation to view the projected GWA.
                         </div>
                     </div>
@@ -1248,6 +1241,7 @@
             return 'badge-risk';
         }
 
+        // Fixed alert – uses prepend to avoid insertBefore errors
         function showAlert(message, type = 'warning') {
             const existing = document.querySelector('.alert-' + type);
             if (existing) existing.remove();
@@ -1255,12 +1249,7 @@
             div.className = `alert alert-${type}`;
             div.textContent = message;
             const main = document.querySelector('.main-content');
-            const firstCard = main.querySelector('.card');
-            if (firstCard) {
-                main.insertBefore(div, firstCard);
-            } else {
-                main.insertBefore(div, main.firstChild);
-            }
+            main.prepend(div);
             setTimeout(() => div.remove(), 5000);
         }
 
@@ -1288,11 +1277,10 @@
 
             if (dataset.length === 0) {
                 container.innerHTML = `
-              <div class="empty-state">
-                <div class="empty-icon">📋</div>
-                No records added yet. Please input student data above, load sample data, or import a CSV.
-              </div>
-            `;
+                    <div class="empty-state">
+                        No records added yet. Please input student data above, load sample data, or import a CSV.
+                    </div>
+                `;
                 return;
             }
 
@@ -1786,7 +1774,7 @@
             const container = $('statsResults');
             if (dataset.length < 3) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="empty-icon">📊</div>Insufficient data. Add at least three records to compute statistics.</div>`;
+                    `<div class="empty-state">Insufficient data. Add at least three records to compute statistics.</div>`;
                 return;
             }
 
@@ -1861,7 +1849,7 @@
             const container = $('regressionResults');
             if (dataset.length < 3) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="empty-icon">🧠</div>Insufficient data for regression training. Add at least three records.</div>`;
+                    `<div class="empty-state">Insufficient data for regression training. Add at least three records.</div>`;
                 return;
             }
 
@@ -1937,7 +1925,7 @@
             const container = $('classificationResults');
             if (dataset.length < 3) {
                 container.innerHTML =
-                    `<div class="empty-state"><div class="empty-icon">🧠</div>Insufficient data for classification training. Add at least three records.</div>`;
+                    `<div class="empty-state">Insufficient data for classification training. Add at least three records.</div>`;
                 return;
             }
 
@@ -2092,7 +2080,6 @@
             $('estStrand').value = 'STEM';
             $('estimationOutput').innerHTML = `
             <div class="empty-state">
-              <div class="empty-icon">📈</div>
               Adjust the parameters and click Compute Estimation to view the projected GWA.
             </div>
           `;
