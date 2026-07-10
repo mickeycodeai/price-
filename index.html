@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>APAD Analytics · Fixed CSV Import</title>
+    <title>APAD Analytics · Robust CSV Import</title>
     <style>
         /* ── CSS Variables ── */
         :root {
@@ -865,6 +865,16 @@
             margin-top: 0.5rem;
             border: 1px solid rgba(177, 62, 62, 0.2);
         }
+
+        .mapping-detail {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: #f7f9fb;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            border: 1px solid var(--border-light);
+        }
     </style>
 </head>
 <body>
@@ -942,7 +952,7 @@
                     </div>
                 </div>
 
-                <!-- CSV Upload — FIXED -->
+                <!-- CSV Upload — FIXED with robust mapping -->
                 <div class="card">
                     <div class="card-title">
                         Import from CSV
@@ -950,7 +960,7 @@
                     </div>
                     <p class="text-secondary" style="font-size:0.88rem; margin-bottom:1rem;">
                         Upload a CSV file with columns: <strong>id, age, sex, strand, aiTool, frequency, purpose, gwa</strong>.
-                        The system now handles <strong>common column name variations</strong> (e.g. "Student ID", "Gender", "AI Tool", "GWA").
+                        The system now handles <strong>common column name variations</strong> and <strong>prevents column mapping conflicts</strong>.
                         A preview window will appear so you can review the data before importing.
                     </p>
 
@@ -967,7 +977,8 @@
                         <button class="btn btn-sm btn-outline" id="clearCsvBtn">Remove</button>
                     </div>
 
-                    <div id="csvValidationErrors" style="display:none;" class="error-detail"></div>
+                    <div id="csvMappingDetails" class="mapping-detail" style="display:none;"></div>
+                    <div id="csvValidationErrors" class="error-detail" style="display:none;"></div>
 
                     <div class="csv-actions">
                         <button class="btn btn-primary" id="previewCsvBtn" disabled>Preview CSV</button>
@@ -1134,7 +1145,8 @@
             csvRowCount = $('csvRowCount'),
             csvColCount = $('csvColCount');
         const csvMappingStatus = $('csvMappingStatus'),
-            csvValidationErrors = $('csvValidationErrors');
+            csvMappingDetails = $('csvMappingDetails');
+        const csvValidationErrors = $('csvValidationErrors');
         const clearCsvBtn = $('clearCsvBtn'),
             previewCsvBtn = $('previewCsvBtn'),
             importCsvBtn = $('importCsvBtn');
@@ -1302,23 +1314,18 @@
         });
 
         /* ============================================================
-           CSV PARSER — FIXED: handles \r\n, BOM, empty fields, quotes
+           CSV PARSER — robust handling
            ============================================================ */
         function parseCSV(text) {
-            // Remove BOM if present
             if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-
-            // Normalize line endings: \r\n → \n, \r → \n
             text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
             const lines = [];
-            let current = '';
-            let insideQuotes = false;
+            let current = '',
+                insideQuotes = false;
             for (let i = 0; i < text.length; i++) {
                 const ch = text[i];
-                if (ch === '"') {
-                    insideQuotes = !insideQuotes;
-                } else if (ch === '\n' && !insideQuotes) {
+                if (ch === '"') { insideQuotes = !insideQuotes; } else if (ch === '\n' && !insideQuotes) {
                     lines.push(current);
                     current = '';
                 } else {
@@ -1326,14 +1333,13 @@
                 }
             }
             if (current) lines.push(current);
-
             if (lines.length === 0) return { headers: [], data: [] };
 
-            // Parse header
+            // Header
             const headerRaw = lines[0];
             const headers = [];
-            let field = '';
-            let inQ = false;
+            let field = '',
+                inQ = false;
             for (let i = 0; i < headerRaw.length; i++) {
                 const ch = headerRaw[i];
                 if (ch === '"') { inQ = !inQ; } else if (ch === ',' && !inQ) {
@@ -1345,92 +1351,94 @@
             }
             if (field) headers.push(field.trim());
 
-            // Parse rows — always push all fields (including empty trailing ones)
+            // Data rows
             const data = [];
             for (let r = 1; r < lines.length; r++) {
                 const row = lines[r];
                 if (!row.trim() && row.length === 0) continue;
                 const fields = [];
-                let f = '';
-                let inQ2 = false;
-                let lastWasComma = false;
+                let f = '',
+                    inQ2 = false;
                 for (let i = 0; i < row.length; i++) {
                     const ch = row[i];
-                    if (ch === '"') {
-                        inQ2 = !inQ2;
-                    } else if (ch === ',' && !inQ2) {
+                    if (ch === '"') { inQ2 = !inQ2; } else if (ch === ',' && !inQ2) {
                         fields.push(f.trim());
                         f = '';
-                        lastWasComma = true;
                     } else {
                         f += ch;
-                        lastWasComma = false;
                     }
                 }
-                // Always push the last field (even if empty)
                 fields.push(f.trim());
-
-                // If we have trailing commas, fields may be shorter than headers — pad with empty strings
                 while (fields.length < headers.length) fields.push('');
-
                 const obj = {};
-                headers.forEach((h, idx) => {
-                    obj[h] = (idx < fields.length) ? fields[idx] : '';
-                });
+                headers.forEach((h, idx) => { obj[h] = (idx < fields.length) ? fields[idx] : ''; });
                 data.push(obj);
             }
             return { headers, data };
         }
 
         /* ============================================================
-           COLUMN MAPPING — with synonyms for flexible matching
+           COLUMN MAPPING — strict but flexible, no conflicts
            ============================================================ */
         const COLUMN_SYNONYMS = {
-            id: ['id', 'student id', 'studentid', 'student_id', 'studentnumber', 'student number', 'stuid', 'uid',
-                'identifier'
-            ],
+            id: ['id', 'student id', 'studentid', 'student_id', 'studentnumber', 'stuid', 'uid', 'identifier'],
             age: ['age', 'ages', 'student age', 'age_years'],
-            sex: ['sex', 'gender', 'gender identity', 'sex assigned at birth'],
-            strand: ['strand', 'academic strand', 'track', 'program', 'course', 'major', 'strand/track'],
-            aiTool: ['aitool', 'ai tool', 'ai_tool', 'primary ai tool', 'ai tool used', 'tool', 'ai assistant',
-                'generative ai tool'
-            ],
-            frequency: ['frequency', 'freq', 'ai frequency', 'usage frequency', 'use frequency', 'frequency of use',
-                'how often'
-            ],
+            sex: ['sex', 'gender', 'gender identity'],
+            strand: ['strand', 'academic strand', 'track', 'program', 'course', 'major'],
+            aiTool: ['aitool', 'ai tool', 'ai_tool', 'primary ai tool', 'tool', 'ai assistant'],
+            frequency: ['frequency', 'freq', 'ai frequency', 'usage frequency', 'use frequency', 'how often'],
             purpose: ['purpose', 'primary purpose', 'ai purpose', 'usage purpose', 'intended use', 'goal'],
             gwa: ['gwa', 'general weighted average', 'grade', 'average grade', 'academic average', 'gpa', 'general average']
         };
 
         function mapColumns(headers) {
+            const assigned = new Set();
             const map = {};
-            const lowerHeaders = headers.map(h => h.toLowerCase().trim().replace(/[^a-z0-9]/g, ''));
+            const cleanHeaders = headers.map(h => h.trim());
 
+            // 1. Try exact (case‑sensitive) match first
             for (const [field, synonyms] of Object.entries(COLUMN_SYNONYMS)) {
-                const cleanSynonyms = synonyms.map(s => s.toLowerCase().trim().replace(/[^a-z0-9]/g, ''));
-                let found = false;
-                for (let i = 0; i < lowerHeaders.length; i++) {
-                    const h = lowerHeaders[i];
-                    if (cleanSynonyms.some(syn => h === syn || h.includes(syn) || syn.includes(h))) {
-                        map[field] = headers[i];
-                        found = true;
+                const exactMatch = cleanHeaders.find(h => h === field);
+                if (exactMatch && !assigned.has(exactMatch)) {
+                    map[field] = exactMatch;
+                    assigned.add(exactMatch);
+                    continue;
+                }
+            }
+
+            // 2. Try case‑insensitive exact match
+            const lowerHeaders = cleanHeaders.map(h => h.toLowerCase());
+            for (const [field, synonyms] of Object.entries(COLUMN_SYNONYMS)) {
+                if (map[field]) continue;
+                const lowerField = field.toLowerCase();
+                const idx = lowerHeaders.findIndex(h => h === lowerField);
+                if (idx !== -1 && !assigned.has(cleanHeaders[idx])) {
+                    map[field] = cleanHeaders[idx];
+                    assigned.add(cleanHeaders[idx]);
+                    continue;
+                }
+            }
+
+            // 3. Try partial match (synonym contains header or vice versa), but only if not assigned
+            for (const [field, synonyms] of Object.entries(COLUMN_SYNONYMS)) {
+                if (map[field]) continue;
+                const cleanSynonyms = synonyms.map(s => s.toLowerCase().trim());
+                for (let i = 0; i < cleanHeaders.length; i++) {
+                    if (assigned.has(cleanHeaders[i])) continue;
+                    const h = cleanHeaders[i].toLowerCase();
+                    if (cleanSynonyms.some(syn => h.includes(syn) || syn.includes(h))) {
+                        map[field] = cleanHeaders[i];
+                        assigned.add(cleanHeaders[i]);
                         break;
                     }
                 }
-                if (!found) {
-                    // Try partial match on original headers (more forgiving)
-                    const origLower = headers.map(h => h.toLowerCase().trim());
-                    for (let i = 0; i < origLower.length; i++) {
-                        const h = origLower[i];
-                        if (synonyms.some(syn => h.includes(syn) || syn.includes(h))) {
-                            map[field] = headers[i];
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                if (!found) map[field] = null;
             }
+
+            // Fill missing with null
+            for (const field of Object.keys(COLUMN_SYNONYMS)) {
+                if (!map[field]) map[field] = null;
+            }
+
             return map;
         }
 
@@ -1470,10 +1478,14 @@
                 csvRowCount.textContent = parsedCsvData.length;
                 csvColCount.textContent = csvHeaders.length;
 
-                // Check column mapping
+                // Map columns
                 const map = mapColumns(csvHeaders);
                 const missing = Object.entries(map).filter(([k, v]) => !v).map(([k]) => k);
                 const found = Object.entries(map).filter(([k, v]) => v).map(([k, v]) => `${k} → "${v}"`);
+
+                // Show mapping details
+                csvMappingDetails.style.display = 'block';
+                csvMappingDetails.innerHTML = `<strong>Column mapping:</strong> ${found.join(' | ')}`;
 
                 if (missing.length === 0) {
                     csvMappingStatus.textContent = '✅ All columns matched';
@@ -1488,7 +1500,7 @@
                     csvValidationErrors.style.display = 'block';
                     csvValidationErrors.textContent =
                         `Could not find columns for: ${missing.join(', ')}. Expected: id, age, sex, strand, aiTool, frequency, purpose, gwa. Check your header row.`;
-                    previewCsvBtn.disabled = false; // Allow preview to debug
+                    previewCsvBtn.disabled = false;
                     importCsvBtn.disabled = true;
                     showAlert(`Column mapping incomplete. Missing: ${missing.join(', ')}`, 'warning');
                 }
@@ -1508,6 +1520,7 @@
             previewCsvBtn.disabled = true;
             importCsvBtn.disabled = true;
             csvValidationErrors.style.display = 'none';
+            csvMappingDetails.style.display = 'none';
             csvImportStats.style.display = 'none';
             showAlert('CSV cleared.', 'info');
         });
@@ -1567,7 +1580,7 @@
         }
 
         /* ============================================================
-           IMPORT CSV — FIXED with robust mapping and validation
+           IMPORT CSV — with robust validation and detailed errors
            ============================================================ */
         importCsvBtn.addEventListener('click', doImportCsv);
 
@@ -1595,29 +1608,33 @@
                 const rawPurpose = String(row[map.purpose] || '').trim();
                 const rawGwa = parseFloat(row[map.gwa]);
 
-                // Validation
                 const rowNum = idx + 2;
+                let valid = true;
+                let errMsg = `Row ${rowNum}: `;
+
                 if (!rawId) { errors.push(`Row ${rowNum}: missing ID`);
-                    skipped++; return; }
+                    valid = false; }
                 if (isNaN(rawAge) || rawAge < 10 || rawAge > 30) { errors.push(`Row ${rowNum}: invalid age (${rawAge})`);
-                    skipped++; return; }
+                    valid = false; }
                 if (!['Male', 'Female'].includes(rawSex)) { errors.push(`Row ${rowNum}: invalid sex "${rawSex}"`);
-                    skipped++; return; }
+                    valid = false; }
                 if (!['HUMSS', 'TVL', 'STEM', 'ABM'].includes(rawStrand)) { errors.push(
                         `Row ${rowNum}: invalid strand "${rawStrand}"`);
-                    skipped++; return; }
+                    valid = false; }
                 if (!rawAiTool) { errors.push(`Row ${rowNum}: missing AI tool`);
-                    skipped++; return; }
+                    valid = false; }
                 if (isNaN(rawFreq) || rawFreq < 1 || rawFreq > 5) { errors.push(
                         `Row ${rowNum}: frequency must be 1-5 (got ${rawFreq})`);
-                    skipped++; return; }
+                    valid = false; }
                 if (!rawPurpose) { errors.push(`Row ${rowNum}: missing purpose`);
-                    skipped++; return; }
+                    valid = false; }
                 if (isNaN(rawGwa) || rawGwa < 70 || rawGwa > 100) { errors.push(
                         `Row ${rowNum}: GWA must be 70-100 (got ${rawGwa})`);
-                    skipped++; return; }
+                    valid = false; }
                 if (dataset.some(r => r.id === rawId)) { errors.push(`Row ${rowNum}: duplicate ID "${rawId}"`);
-                    skipped++; return; }
+                    valid = false; }
+
+                if (!valid) { skipped++; return; }
 
                 dataset.push({
                     id: rawId,
@@ -1635,7 +1652,6 @@
 
             renderTable();
 
-            // Show stats
             importStats = { added, skipped, errors };
             if (added > 0 || skipped > 0) {
                 csvImportStats.style.display = 'grid';
@@ -1653,12 +1669,11 @@
                 showAlert(`No records imported. ${skipped} rows had errors. Check validation details.`, 'warning');
             }
 
-            if (errors.length > 0 && errors.length <= 10) {
+            if (errors.length > 0) {
                 csvValidationErrors.style.display = 'block';
-                csvValidationErrors.textContent = '⚠️ ' + errors.join('; ');
-            } else if (errors.length > 10) {
-                csvValidationErrors.style.display = 'block';
-                csvValidationErrors.textContent = `⚠️ ${errors.length} errors (first 10 shown): ${errors.slice(0, 10).join('; ')} …`;
+                const displayErrors = errors.length > 15 ? errors.slice(0, 15).concat([`… and ${errors.length - 15} more`]) :
+                    errors;
+                csvValidationErrors.textContent = '⚠️ ' + displayErrors.join('; ');
             } else {
                 csvValidationErrors.style.display = 'none';
             }
@@ -1671,6 +1686,7 @@
             csvFileInfo.style.display = 'none';
             previewCsvBtn.disabled = true;
             importCsvBtn.disabled = true;
+            csvMappingDetails.style.display = 'none';
         }
 
         /* ============================================================
